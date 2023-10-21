@@ -13,11 +13,12 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@monaco-editor/react": "^4.6.0",
+    "cheerio": "^1.0.0-rc.12",
     "framer-motion": "^10.16.4",
     "monaco-editor": "^0.44.0",
-    "cheerio": "^1.0.0-rc.12",
     "next": "13.5.6",
     "node-fetch": "^3.3.2",
+    "openai": "^4.12.4",
     "react": "^18",
     "react-dom": "^18"
   },
