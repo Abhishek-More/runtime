@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
     "next": "13.5.6",
     "openai": "^4.12.4",
     "react": "^18",
