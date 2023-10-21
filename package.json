@@ -16,11 +16,13 @@
     "framer-motion": "^10.16.4",
     "monaco-editor": "^0.44.0",
     "next": "13.5.6",
+    "node-fetch": "^3.3.2",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/node-fetch": "^2.6.7",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10",
