@@ -10,10 +10,16 @@
   },
   "dependencies": {
     "next": "13.5.6",
+<<<<<<< HEAD
     "node-fetch": "^3.3.2",
     "react": "^18",
     "react-dom": "^18",
     "yarn": "^1.22.19"
+=======
+    "openai": "^4.12.4",
+    "react": "^18",
+    "react-dom": "^18"
+>>>>>>> 55ed12e3f1056bbcbc96c139b0f6035aeb90feaa
   },
   "devDependencies": {
     "@types/node": "^20",
