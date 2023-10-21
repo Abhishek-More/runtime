@@ -9,17 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@monaco-editor/react": "^4.6.0",
+    "framer-motion": "^10.16.4",
+    "monaco-editor": "^0.44.0",
+    "cheerio": "^1.0.0-rc.12",
     "next": "13.5.6",
-<<<<<<< HEAD
     "node-fetch": "^3.3.2",
     "react": "^18",
-    "react-dom": "^18",
-    "yarn": "^1.22.19"
-=======
-    "openai": "^4.12.4",
-    "react": "^18",
     "react-dom": "^18"
->>>>>>> 55ed12e3f1056bbcbc96c139b0f6035aeb90feaa
   },
   "devDependencies": {
     "@types/node": "^20",
