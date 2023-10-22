@@ -18,8 +18,8 @@ export default function LobbyComponent({ lobby }: LobbyComponentProps) {
                 <a href={"/game/" + lobby.lobby_id}>
                     <div className="flex items-center">
                     <img className="rounded-full h-12 w-12" src="https://static-cdn.jtvnw.net/jtv_user_pictures/27fdad08-a2c2-4e0b-8983-448c39519643-profile_image-70x70.png" alt="Logo" />
-                    <div className="ml-2">
-                    <div className="text-sm font-semibold text-gray-600">{lobby.lobby_id}</div>
+                    <div className="ml-8">
+                    <div className="text-sm text-gray-600">LOBBY ID: <span className="font-semibold">{lobby.lobby_id}</span></div>
                     </div>
                     </div>
                 </a>
