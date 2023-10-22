@@ -28,6 +28,15 @@ export default function Home() {
   const [player1Win, setPlayer1Win] = useState(false);
   const [playingStartAnimation, setPlayingStartAnimation] = useState(false);
   const [playingEndAnimation, setPlayingEndAnimation] = useState(false);
+  const [showVideo, setShowVideo] = useState(true); // Add this state
+
+  useEffect(() => {
+    if (isGameEnded && (player1Win ? isPlayer1 : !isPlayer1)) {
+      setTimeout(() => {
+        setShowVideo(false);
+      }, 6000); 
+    }
+  }, [isGameEnded, player1Win, isPlayer1]);
 
   function ready()
   {
@@ -148,7 +157,7 @@ useEffect(() => {
     setPlayer1Win(lobby.lobby_state.split(" ")[1] === "1");
     setTimeout(() => {
       setPlayingEndAnimation(false);
-    }, 2000);
+    }, 6000);
   }
 }, [lobby.lobby_state, isGameStarted, isGameEnded]);
 
@@ -168,78 +177,128 @@ useEffect(() => {
       <Link href="/" className="fixed left-12 top-4 text-xl text-black font-extrabold font-metal">
         RUNTIME
       </Link>
-      <div className="flex flex-col justify-center text-center rounded-lg border border-1px shadow-sm mt-12 px-48 py-4 gap-2">
+      <div className="flex gap-24 align-center items-center text-center rounded-lg border border-1px shadow-sm mt-12 px-24 py-4 gap-2 font-bold">
         <div>
           <h1 className="text-center text-lg"><span className={isPlayer1 ? "font-bold text-purple-800" : ""}>{lobby.player1_nickname}</span> vs. <span className={!isPlayer1 ? "font-bold text-purple-800" : ""}>{lobby.player2_nickname}</span></h1>
         </div>
-
+  
           <div>
           { isGameStarted ? <div></div> :
           <Button  className={(isReady ? "animate-bounce" : "") + ""} onClick={() => { ready() }} fontSize="xs">I&apos;M READY </Button>
           }
         </div>
-       </div>
-
-       <div>
-        { !playingStartAnimation ? <div></div> :
-          <h1 className="animate-pulse text-purple-600 font-bold text-8xl">GO!</h1>
-        }
-       </div>
-
-        <div>
-          { !playingEndAnimation ? <div></div> :
-            <h1 className="animate-pulse text-purple-600 font-bold text-8xl">GAME OVER</h1>
-          }
-        </div>
-
-        <div>
-          { !isGameEnded ? <div></div> :
-            <h1 className="text-4xl font-bold text-purple-600">{player1Win ? lobby.player1_nickname : lobby.player2_nickname} WINS!</h1>
-          }
-        </div>
-       
-      <div className="flex gap-48 mb-12">
-        <div className="flex flex-col items-center gap-2">
-          <img src="/resting.gif" width ="48px"></img>
-          <div className="rounded-full border border-black"
-            style={{ width: "400px", height: "8px" }}>
-            <div
-              className="flex h-6 w-48 items-center justify-center rounded-full bg-black text-xs leading-none"
-              style={{ width: player1_percentage + "%", height: "100%" }}>
-            </div>
-            {/* <div className="absolute inset-0 flex items-center justify-center">
-              <div className="h-8 w-8 rounded-full bg-red-500"></div>
-            </div> */}
-          </div>
-        </div>
-        
-        <br />
-
-        <div className="flex flex-col items-center gap-2">
-          <img src="/resting.gif" width ="48px"></img>
-
-          <div className="rounded-full border border-black"
-            style={{ width: "400px", height: "8px" }}>
-            <div
-              className="flex h-6 w-48 items-center justify-center rounded-full bg-black text-xs leading-none"
-              style={{ width: player2_percentage + "%", height: "100%" }}>
-            </div>
-          </div>
-        </div>
-
       </div>
-
+      <div className="text-xs opacity-40">
+        Once both players click &ldquo;I&apos;m Ready, the round will begin.
+      </div>
+  
       <div>
-        <button onClick={() => increaseScore(1)}>Give player 1 a point</button>
-        <button onClick={() => increaseScore(2)}>Give player 2 a point</button>
+        { playingStartAnimation &&
+          <h1 className="fixed animate-pulse text-black font-bold text-8xl font-metal">GO!</h1>
+        }
       </div>
+  
+      <div>
+        { playingEndAnimation &&
+          <h1 className="fixed top-24 left-0 w-screen h-screen flex justify-center z-50 animate-pulse text-black font-bold text-8xl font-metal">GAME OVER</h1>
+        }
+      </div>
+  
+      <div>
+        { isGameEnded &&
+          <div>
+            <h1 className="absolute top-24 left-0 w-screen h-screen flex justify-center z-50 text-4xl font-bold text-purple-800 font-metal">{player1Win ? lobby.player1_nickname : lobby.player2_nickname} WINS!</h1>
+            
+          </div>
+        }
+      </div>
+      {isGameEnded && !player1Win && showVideo && (
+        <div className="fixed top-0 left-0 w-screen h-screen flex justify-center items-center z-50">
+            <div className="border border-2 border-black rounded-lg">
+              <img src="/loser.png" alt="Winning Image" width="900px" className="rounded-lg" />
+            </div>
+        </div>
+      )}
 
-      <div className="flex w-screen h-full gap-2 items-center">
-        <div className="w-2/5 h-full ml-4 mb-4 bg-sc-darkpurple rounded-lg"></div>
-        <div className="flex flex-col gap-4 w-3/5 h-full mb-4 rounded-lg">
-          <EditorComponent />
+      {isGameEnded && (player1Win ? isPlayer1 : !isPlayer1) && showVideo && (
+        <div className="fixed top-0 left-0 w-screen h-screen flex justify-center items-center z-50">
+          <div className="border border-2 border-black rounded-lg">
+            <img src="/winner.png" alt="Winning Image" width="900px" className="rounded-lg" />
+          </div>
+      </div>
+      )}
+
+      
+     
+    <div className="flex gap-48 mb-12">
+      <div className="flex flex-col items-center gap-2">
+        <div>
+          Coder <span className="font-bold">{lobby.player1_nickname}</span>
+        </div>
+        <div className="flex">
+          <div className="max-w-12px">
+            {isGameEnded && (
+              <div className="text-xs border border-2 border-black rounded-full px-2">
+                On a path of enlightenment...
+              </div>
+            )}
+          </div>
+          <img src="/resting.gif" width="48px" alt="Resting GIF" />
+        </div>
+
+        <div className="rounded-full border border-black"
+          style={{ width: "400px", height: "8px" }}>
+          <div
+            className="flex h-6 w-48 items-center justify-center rounded-full"
+            style={{
+              width: player1_percentage + "%",
+              height: "100%",
+              background: "linear-gradient(to right, #5B168A, #F70080)" // Gradient background
+            }}>
+          </div>
+        </div>
+      </div>
+      
+      <br />
+  
+      <div className="flex flex-col items-center gap-2">
+        <div >
+          Coder <span className="font-bold">{lobby.player2_nickname}</span>
+        </div>
+        <div className="flex">
+          <div className="max-w-12px">
+            {isGameEnded && (
+              <div className="text-xs border border-2 border-black rounded-full px-2">
+                Sharpening my academic weapon...
+              </div>
+            )}
+          </div>
+          <img src="/resting.gif" width="48px"></img>
+        </div>
+        <div className="rounded-full border border-black"
+          style={{ width: "400px", height: "8px" }}>
+          <div
+            className="flex h-6 w-48 items-center justify-center rounded-full"
+            style={{
+              width: player2_percentage + "%",
+              height: "100%",
+              background: "linear-gradient(to right, #5B168A, #F70080)" // Gradient background
+            }}>
+          </div>
         </div>
       </div>
     </div>
+    {/* <div>
+      <button onClick={() => increaseScore(1)}>Give player 1 a point</button>
+      <button onClick={() => increaseScore(2)}>Give player 2 a point</button>
+    </div> */}
+  
+    <div className="flex w-screen h-full gap-2 items-center">
+      <div className="w-2/5 h-full ml-4 mb-4 bg-sc-darkpurple rounded-lg"></div>
+      <div className="flex flex-col gap-4 w-3/5 h-full mb-4 rounded-lg">
+        <EditorComponent />
+      </div>
+    </div>
+  </div>
   );
 }
