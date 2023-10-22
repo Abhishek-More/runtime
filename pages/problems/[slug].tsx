@@ -54,8 +54,12 @@ export const getServerSideProps = async (context: any) => {
   const snap = await getDoc(docRef);
   const data = snap.data();
 
+  //Set to problem state + timestamp respectively
   const source = data?.problem;
   const title = data?.title;
+  
+  
+  
   const mdxSource = await serialize(source);
   return { props: { source: mdxSource, title: title } };
 };

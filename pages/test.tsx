@@ -15,29 +15,29 @@ export default function Home() {
         })
     }
 
-  const [lobbies, setLobbies] = useState([] as Lobby[]);
+    const [lobbies, setLobbies] = useState([] as Lobby[]);
 
-  useEffect(() => {
-    // Initialize Firebase
-    let app: FirebaseApp;
-    if (getApps().length === 0) {
-        app = initializeApp(firebaseConfig);
-    }
-    const db = getFirestore(app);
-    const collectionRef = collection(db, 'lobbies');
+    useEffect(() => {
+        // Initialize Firebase
+        let app: FirebaseApp;
+        if (getApps().length === 0) {
+            app = initializeApp(firebaseConfig);
+        }
+        const db = getFirestore(app);
+        const collectionRef = collection(db, 'lobbies');
 
-    // Subscribe to real-time updates
-    const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
-        const updatedData: Lobby[] = [];
-        snapshot.forEach((doc) => {
-            updatedData.push(doc.data() as Lobby);
+        // Subscribe to real-time updates
+        const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+            const updatedData: Lobby[] = [];
+            snapshot.forEach((doc) => {
+                updatedData.push(doc.data() as Lobby);
+            });
+            setLobbies(updatedData);
         });
-        setLobbies(updatedData);
-    });
 
-    // Clean up the subscription when the component unmounts
-    return () => unsubscribe();
-}, []);
+        // Clean up the subscription when the component unmounts
+        return () => unsubscribe();
+    }, []);
 
 
 
