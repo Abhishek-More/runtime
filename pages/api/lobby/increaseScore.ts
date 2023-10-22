@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 type Data = {
   status: string,
-  isPlayer1?: boolean,
 }
 
 export type Lobby = {
@@ -44,13 +43,14 @@ export default async function handler(
         return;
     }
 
-    const nickname = req.body.nickname;
+    const isPlayer1 = req.body.isPlayer1;
     const lobbyId = req.body.lobbyId;
-    if (!nickname || !lobbyId) {
-        res.status(400).json({ status: 'Request was missing nickname or lobbyId' });
+
+    if (isPlayer1 === undefined || !lobbyId) {
+        res.status(400).json({ status: 'Request was missing isPlayer1 or lobbyId' });
         return;
     }
-    
+
     // Check if lobby exists
     const lobbyRef = doc(db, "lobbies", lobbyId);
     const lobbySnap = await getDoc(lobbyRef);
@@ -58,33 +58,18 @@ export default async function handler(
         res.status(404).json({ status: 'Lobby does not exist' });
         return;
     }
-    // Check if player is already in lobby
+
+    // Increase score
     const lobbyData = lobbySnap.data() as Lobby;
-    if (lobbyData.player1_nickname === nickname || lobbyData.player2_nickname === nickname) {
-        res.status(400).json({ status: 'Success', isPlayer1: lobbyData.player1_nickname === nickname });
-        return;
+    if (isPlayer1) {
+        lobbyData.player1_progress++;
+    } else {
+        lobbyData.player2_progress++;
     }
+    await setDoc(lobbyRef, lobbyData);
 
-    // Check if lobby is full
-    if (lobbyData.player1_nickname !== "" && lobbyData.player2_nickname !== "") {
-        res.status(400).json({ status: 'Lobby is full' });
-        return;
-    }
+    
 
-    // If player 1 is empty, fill player 1
-    if (lobbyData.player1_nickname === "") {
-        await setDoc(lobbyRef, { player1_nickname: nickname }, { merge: true });
-        res.status(200).json({ status: 'Success', isPlayer1: true });
-        return;
-    }
-
-    // If player 2 is empty, fill player 2
-    if (lobbyData.player2_nickname === "") {
-        await setDoc(lobbyRef, { player2_nickname: nickname }, { merge: true });
-        res.status(200).json({ status: 'Success', isPlayer1: false });
-        return;
-    }
-
-    res.status(500).json({ status: 'the logic for this route is wrong lol' });
+    res.status(200).json({ status: 'Success' });
     return;
 }

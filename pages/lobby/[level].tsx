@@ -37,7 +37,10 @@ export default function Lobby() {
                     body: JSON.stringify({problemSet:level})
                 })
                 const data = await response.json();
-                window.location.href = "/game/" + data.newLobbyId + "?nickname=" + nickname;
+                const params = new URLSearchParams();
+                params.append("nickname", nickname as string);
+
+                window.location.href = "/game/" + data.newLobbyId + "?" + params.toString();
             } 
             catch (error) {
                 console.error("Error creating lobby:", error);
@@ -75,7 +78,7 @@ export default function Lobby() {
         <div className="min-h-screen flex flex-col p-12 justify-center items-center font-monda gap-4">
             <div className="absolute top-0 left-0 px-12 py-6">
                 <Link className="" href="/">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" className="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                     </svg>
                 </Link>
@@ -102,8 +105,8 @@ export default function Lobby() {
                 </svg>
               </div>
               <div>
-                  {lobbies.map((item) => (
-                      <LobbyComponent key={item.lobby_id} lobby={item}></LobbyComponent>
+                  {lobbies.filter((lobby) => {return lobby.lobby_problemset === level && !(lobby.player1_nickname !== "" && lobby.player2_nickname !== "")}).map((item) => (
+                      <LobbyComponent key={item.lobby_id} lobby={item} nickname={nickname as string}></LobbyComponent>
                   ))}
               </div>
           </div>
