@@ -5,7 +5,7 @@ import { Select, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 
-export default function EditorComponent({ output, onCorrect }: any) {
+export default function EditorComponent({ output, onCorrect, problemStatement }: any) {
   const INITIAL_CODE = "# Write your code here";
   const router = useRouter();
   const { id } = router.query;
@@ -32,6 +32,31 @@ export default function EditorComponent({ output, onCorrect }: any) {
   }, 3000);
 
   const checkStatus = async (token: any) => {
+    // Do cheat detection
+    let cheat_response = await fetch("/api/cheat_detector", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        question: problemStatement,
+        answer: code, 
+      }),
+    });
+    let cheat_data = await cheat_response.json();
+    console.log(cheat_data);
+    if (JSON.parse(cheat_data.answer).is_cheating && JSON.parse(cheat_data.answer).is_cheating === true) {
+      toast({
+        title: "Hard-Coding Detected",
+        description: "Make sure you solve the problem instead of just printing out the correct answer!",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+
+
     const options = {
       method: "GET",
       url: "https://judge0-ce.p.rapidapi.com/submissions/" + token,
@@ -68,12 +93,26 @@ export default function EditorComponent({ output, onCorrect }: any) {
         if (res == exp) {
           if (!id) {
             console.log("CORRECT");
+            toast({
+              title: "Correct Answer!.",
+              description: "You rock! Here's the next problem :)",
+              status: "success",
+              duration: 2000,
+              isClosable: true,
+            });
             onCorrect();
           } else {
             router.push("/complete?id=" + id);
           }
         } else {
           console.log("WRONG DUMMY");
+          toast({
+            title: "Wrong Answer!.",
+            description: "Try again!",
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+          });
         }
         console.log("response.data", response.data);
         return;
@@ -82,6 +121,13 @@ export default function EditorComponent({ output, onCorrect }: any) {
       console.log("err", err);
       setProcessing(false);
       console.log("ERROR");
+      toast({
+        title: "Something broke on our end...",
+        description: "Whoops :/",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 

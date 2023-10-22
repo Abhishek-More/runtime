@@ -173,9 +173,9 @@ export default function Home() {
   }, [lobby.lobby_state, isGameStarted, isGameEnded]);
 
   const player1_percentage =
-    (Math.max(lobby.player1_progress, 0) / (lobby && lobby.lobby_problemset !== "easys" ? problemSet.length : 5)) * 100;
+    (Math.max(lobby.player1_progress, 0) / (lobby && lobby.lobby_problemset !== "easys" ? problemSet.length : 3)) * 100;
   const player2_percentage =
-    (Math.max(lobby.player2_progress, 0) / (lobby && lobby.lobby_problemset !== "easys" ? problemSet.length : 5)) * 100;
+    (Math.max(lobby.player2_progress, 0) / (lobby && lobby.lobby_problemset !== "easys" ? problemSet.length : 3)) * 100;
 
   // Check if someone has won
   if (player1_percentage >= 100 && !isGameEnded && isGameStarted) {
@@ -444,6 +444,7 @@ export default function Home() {
             onCorrect={() => {
               increaseScore(isPlayer1 ? 1 : 2);
             }}
+            problemStatement={source}
           />
         </div>
       </div>
