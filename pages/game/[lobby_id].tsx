@@ -30,7 +30,32 @@ export default function Home() {
   const [playingEndAnimation, setPlayingEndAnimation] = useState(false);
   const [showVideo, setShowVideo] = useState(true); // Add this state
   const [playingCorrectAnimation, setPlayingCorrectAnimation] = useState(false);
+  const [countdown, setCountdown] = useState(3);
+  const [countdownText, setCountdownText] = useState('');
 
+  useEffect(() => {
+    if (!playingStartAnimation) return;
+  
+    const countdownInterval = setInterval(() => {
+      if (countdown === -1) {
+        setPlayingStartAnimation(false);
+        clearInterval(countdownInterval);
+      } 
+      else if (countdown === 0) {
+        setCountdownText("GO!");
+      }
+      else {
+        setCountdown(countdown - 1);
+        setCountdownText(countdown.toString()); // Update countdownText
+      }
+    }, 1000);
+  
+    return () => {
+      clearInterval(countdownInterval);
+    };
+  }, [playingStartAnimation, countdown]);
+  
+  
   useEffect(() => {
     if (isGameEnded && (player1Win ? isPlayer1 : !isPlayer1)) {
       setTimeout(() => {
@@ -158,7 +183,7 @@ export default function Home() {
       setPlayingStartAnimation(true);
       setTimeout(() => {
         setPlayingStartAnimation(false);
-      }, 2000);
+      }, 5000);
     }
 
     if (lobby.lobby_state.startsWith("finished") && !isGameEnded) {
@@ -230,9 +255,7 @@ export default function Home() {
         </div>
 
         <div>
-          {isGameStarted ? (
-            <div></div>
-          ) : (
+          {!isGameStarted && (
             <Button
               className={(isReady ? "animate-bounce" : "") + ""}
               onClick={() => {
@@ -246,71 +269,20 @@ export default function Home() {
         </div>
       </div>
 
-      <div>
-        {!playingStartAnimation ? (
-          <div></div>
-        ) : (
-          <h1 className="animate-pulse text-purple-600 font-bold text-8xl">
-            GO!
-          </h1>
-        )}
-      </div>
+    <div>
+      {!playingStartAnimation ? (
+        <div></div>
+      ) : (
+      <h1 className="fixed top-36 left-0 w-screen h-screen flex justify-center z-50 text-transparent bg-clip-text font-bold text-8xl bg-gradient-to-r from-purple-800 to-pink-300">
+        {countdownText}
+      </h1>
 
-      <div>
-        {!playingEndAnimation ? (
-          <div></div>
-        ) : (
-          <h1 className="animate-pulse text-purple-600 font-bold text-8xl">
-            GAME OVER
-          </h1>
-        )}
-      </div>
-
-      <div>
-        {!isGameEnded ? (
-          <div></div>
-        ) : (
-          <h1 className="text-4xl font-bold text-purple-600">
-            {player1Win ? lobby.player1_nickname : lobby.player2_nickname} WINS!
-          </h1>
-        )}
-      </div>
-
-      {/* <div className="flex gap-48 mb-12">
-        <div className="flex flex-col items-center gap-2">
-          <img src="/resting.gif" width="48px"></img>
-          <div
-            className="rounded-full border border-black"
-            style={{ width: "400px", height: "8px" }}
-          >
-            <div
-              className="flex h-6 w-48 items-center justify-center rounded-full bg-black text-xs leading-none"
-              style={{ width: player1_percentage + "%", height: "100%" }}
-            ></div>
-
-          </div>
-        </div>
-
-        <br />
-
-        <div className="flex flex-col items-center gap-2">
-          <img src="/resting.gif" width="48px"></img>
-
-          <div
-            className="rounded-full border border-black"
-            style={{ width: "400px", height: "8px" }}
-          >
-            <div
-              className="flex h-6 w-48 items-center justify-center rounded-full bg-black text-xs leading-none"
-              style={{ width: player2_percentage + "%", height: "100%" }}
-            ></div>
-          </div>
-        </div>
-      </div> */}
+      )}
+    </div>
 
       <div>
         {playingCorrectAnimation && (
-          <h1 className="fixed animate-pulse text-black font-bold text-8xl font-metal">
+          <h1 className="fixed top-24 left-0 w-screen h-screen flex justify-center z-50 animate-pulse text-black font-bold text-8xl font-metal">
             CORRECT!
           </h1>
         )}
@@ -334,6 +306,7 @@ export default function Home() {
           </div>
         )}
       </div>
+      
       {isGameEnded && !player1Win && showVideo && (
         <div className="fixed top-0 left-0 w-screen h-screen flex justify-center items-center z-50">
           <div className="border border-2 border-black rounded-lg">
@@ -365,10 +338,10 @@ export default function Home() {
           <div>
             Coder <span className="font-bold">{lobby.player1_nickname}</span>
           </div>
-          <div className="flex">
+          <div className="flex mt-4">
             <div className="max-w-12px">
               {isGameEnded && (
-                <div className="text-xs border border-2 border-black rounded-full px-2">
+                <div className=" animate-bounce opacity-60 text-xs border border-2 border-black rounded-full px-2">
                   On a path of enlightenment...
                 </div>
               )}
@@ -397,10 +370,10 @@ export default function Home() {
           <div>
             Coder <span className="font-bold">{lobby.player2_nickname}</span>
           </div>
-          <div className="flex">
+          <div className="flex mt-4">
             <div className="max-w-12px">
               {isGameEnded && (
-                <div className="text-xs border border-2 border-black rounded-full px-2">
+                <div className="animate-bounce opacity-60 text-xs border border-2 border-black rounded-full px-2">
                   Sharpening my academic weapon...
                 </div>
               )}

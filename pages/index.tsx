@@ -64,13 +64,18 @@ export default function Home() {
       console.log('Nickname:', nickname);
     }
   };
+
+  const handlePlayButtonClick1 = () => {
+    window.location.href="/singleplayer"
+  };
   
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
   };
   
   return (
-    <div className="relative">
+  <div className="relative" style={{ backgroundImage: '', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', minHeight: '100vh', backgroundColor: 'rgba(255, 255, 255, 0.1)', // Adjust the opacity (0.1 for 10%)
+}}>
       <div className="fixed right-12 bottom-12">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-8 h-8">
           <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
@@ -86,7 +91,7 @@ export default function Home() {
           }}
         >
           <motion.img
-            className="opacity-10 "
+            className="opacity-20 "
             src="/landingcat1.png"
             alt="Background Image"
             initial={{ y: 10, rotate: 0 }} // Initial rotation is 0 degrees
@@ -100,7 +105,7 @@ export default function Home() {
             }}
           />
           <motion.img
-            className="opacity-10"
+            className="opacity-20"
             src="/landingcat2.png"
             alt="Background Image"
             initial={{ y: 0, rotate: -5 }} // Initial rotation is 0 degrees
@@ -115,8 +120,12 @@ export default function Home() {
           />
         </div>
       <div className="relative flex flex-col justify-center items-center  gap-8 py-8">
-        <div className="text-8xl text-black font-extrabold font-metal">
+        <div className="flex">
+          <img src="star.svg"></img>
+          <div className="text-8xl text-black font-extrabold font-metal">
           RUNTIME
+          </div>
+          <img src="star.svg"></img>
         </div>
 
         <div className="flex flex-col justify-center bg-white rounded-lg p-6 gap-4 font-monda border border-gray-600 border-double border-2 pb-12">
@@ -154,7 +163,22 @@ export default function Home() {
             />
           </div>
           {formError && <div className="text-red-500">{formError}</div>}
-          <Button onClick={handlePlayButtonClick}>PLAY</Button>
+          {/* <Button onClick={handlePlayButtonClick}>PLAY</Button> */}
+          <button onClick={handlePlayButtonClick} className="px-12 py-2 text-white font-bold font-monda text-xl">
+            <span className="spark__container">
+              <span className="spark" />
+            </span>
+            <span className="backdrop" />
+            <span className="text">MULTIPLAYER</span>
+          </button>
+          <button onClick={handlePlayButtonClick1} className="px-12 py-2 text-white font-bold font-monda text-xl">
+            <span className="spark__container">
+              <span className="spark" />
+            </span>
+            <span className="backdrop" />
+            <span className="text">SINGLEPLAYER</span>
+          </button>
+
         </div>
       </div>
     </div>
