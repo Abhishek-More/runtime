@@ -58,17 +58,16 @@ export default async function handler(
         res.status(404).json({ status: 'Lobby does not exist' });
         return;
     }
-    
-    // Check if lobby is full
+    // Check if player is already in lobby
     const lobbyData = lobbySnap.data() as Lobby;
-    if (lobbyData.player1_nickname !== "" && lobbyData.player2_nickname !== "") {
-        res.status(400).json({ status: 'Lobby is full' });
+    if (lobbyData.player1_nickname === nickname || lobbyData.player2_nickname === nickname) {
+        res.status(400).json({ status: 'Success', isPlayer1: lobbyData.player1_nickname === nickname });
         return;
     }
 
-    // Check if player is already in lobby
-    if (lobbyData.player1_nickname === nickname || lobbyData.player2_nickname === nickname) {
-        res.status(400).json({ status: 'Success', isPlayer1: lobbyData.player1_nickname === nickname });
+    // Check if lobby is full
+    if (lobbyData.player1_nickname !== "" && lobbyData.player2_nickname !== "") {
+        res.status(400).json({ status: 'Lobby is full' });
         return;
     }
 
