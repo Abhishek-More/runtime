@@ -20,6 +20,12 @@ function SelectButton({ label, selected, onClick }: any) {
   );
 }
 
+const levelQueryMapping = {
+  'BEGINNER RAPID-FIRE': 'easys',
+  'LEETCODE EASY': 'mids',
+  'LEETCODE MEDIUM': 'mediums',
+}; 
+
 export default function Home() {
 
   const router = useRouter();
@@ -44,9 +50,9 @@ export default function Home() {
     } else {
       if (selectedButton) {
         router.push({
-          pathname: `/lobby/${selectedButton}`, // Use template literals
+          pathname: `/lobby/${levelQueryMapping[selectedButton]}`, // Use template literals
           query: {
-            level: selectedButton,
+            level: levelQueryMapping[selectedButton],
             nickname: nickname,
           },
         });
@@ -64,6 +70,7 @@ export default function Home() {
   
   return (
     <div className="flex flex-col justify-center items-center min-h-screen w-screen gap-8 py-8">
+
       <div className="text-8xl text-black font-extrabold font-metal">
         RUNTIME
       </div>
