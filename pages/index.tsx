@@ -1,6 +1,7 @@
 import EditorComponent from "@/components/editorTab";
 import { Button } from "@chakra-ui/react";
-import React, { useState } from 'react';
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from 'react';
 
 function SelectButton({ label, selected, onClick }: any) {
   return (
@@ -19,24 +20,55 @@ function SelectButton({ label, selected, onClick }: any) {
   );
 }
 
-export default function StartPage() {
-  const [selectedButton, setSelectedButton] = React.useState(null);
+export default function Home() {
 
+  const router = useRouter();
+  const { query } = router;
+  const [selectedButton, setSelectedButton] = React.useState(null);
+  const [nickname, setNickname] = useState('');
+  const [formError, setFormError] = useState('');
+  
   const handleButtonClick = (Button:any) => {
     if (selectedButton === Button) {
-      setSelectedButton(null); // Deselect the button
+      setSelectedButton(null);
     } else {
-      setSelectedButton(Button); // Select the button
+      setSelectedButton(Button);
+    }
+  };
+
+  const handlePlayButtonClick = () => {
+    if (!selectedButton) {
+      setFormError('Please select a level.');
+    } else if (!nickname) {
+      setFormError('Please enter a nickname.');
+    } else {
+      if (selectedButton) {
+        router.push({
+          pathname: `/lobby/${selectedButton}`, // Use template literals
+          query: {
+            level: selectedButton,
+            nickname: nickname,
+          },
+        });
+      } else {
+        router.push({ query: {} });
+      }
+      console.log('Selected Level:', selectedButton);
+      console.log('Nickname:', nickname);
     }
   };
   
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNickname(e.target.value);
+  };
+  
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen w-screen gap-8 py-12">
+    <div className="flex flex-col justify-center items-center min-h-screen w-screen gap-8 py-8">
       <div className="text-8xl text-black font-extrabold font-metal">
         RUNTIME
       </div>
 
-      <div className="flex flex-col justify-center bg-white rounded-lg p-6 shadow-md gap-4 font-monda border border-gray-600 border-double border-2 pb-12">
+      <div className="flex flex-col justify-center bg-white rounded-lg p-6 gap-4 font-monda border border-gray-600 border-double border-2 pb-12">
         <div>
           <div className="text-xl font-semibold mb-2">
             HOWDY PLAYER, WELCOME TO THE RING. 
@@ -49,7 +81,7 @@ export default function StartPage() {
         <div className="flex flex-col items-start">
           <label htmlFor="username" className="text-gray-600">Nickname</label>
         </div>
-        <input type="text" id="username" className="border rounded-md p-2 mb-4"/>
+        <input onChange={handleNicknameChange} type="text" id="username" className="border rounded-md p-2 mb-4"/>
 
         <div className="flex flex-col items-start">
           <label htmlFor="level" className="text-gray-600">Choose Your Level</label>
@@ -71,8 +103,8 @@ export default function StartPage() {
             onClick={() => handleButtonClick('LEETCODE MEDIUM')}
           />
         </div>
-
-        <Button>PLAY</Button>
+        {formError && <div className="text-red-500">{formError}</div>}
+        <Button onClick={handlePlayButtonClick}>PLAY</Button>
       </div>
     </div>
   );
