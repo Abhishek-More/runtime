@@ -12,6 +12,7 @@ type Data = {
 export type Lobby = {
     lobby_id: string,
     lobby_state: string,
+    lobby_problemset: string,
     player1_nickname: string,
     player2_nickname: string,
     player1_progress: number,
@@ -49,6 +50,7 @@ export default async function handler(
     const newLobbyData: Lobby = {
         lobby_id: newLobbyUUID,
         lobby_state: "forming",
+        lobby_problemset: req.body.problemSet,
         player1_nickname: "",
         player2_nickname: "",
         player1_progress: -1,

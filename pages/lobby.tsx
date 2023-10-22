@@ -14,7 +14,8 @@ export default function StartPage() {
     async function createLobby() {
         setIsCreatingLobby(true);
         const response = await fetch("/api/lobby/create", {
-            method: "POST"
+            method: "POST",
+            
         })
         const data = await response.json();
         window.location.href = "/game/" + data.newLobbyId;
