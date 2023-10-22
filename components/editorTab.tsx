@@ -1,12 +1,16 @@
 // import * as monaco from 'monaco-editor';
 import { Editor } from "@monaco-editor/react";
-import { useEffect, useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Select, useToast } from "@chakra-ui/react";
 import axios from "axios";
-import { languages } from "monaco-editor";
+import { firebaseConfig } from "./fireBaseConfig";
+import { initializeApp } from "firebase/app";
+import { useRouter } from "next/router";
 
 export default function EditorComponent({ output }: any) {
   const INITIAL_CODE = "# Write your code here";
+  const router = useRouter();
+  const { id } = router.query;
   const toast = useToast();
 
   const [code, setCode] = useState<string>(INITIAL_CODE);
@@ -15,6 +19,17 @@ export default function EditorComponent({ output }: any) {
   );
   const [processing, setProcessing] = useState(false);
   const [outputDetails, setOutputDetails] = useState(false);
+
+  useInterval(() => {
+    axios({
+      method: "post",
+      url: "/api/upload",
+      data: {
+        code: code,
+        id: id,
+      },
+    });
+  }, 3000);
 
   const checkStatus = async (token: any) => {
     const options = {
@@ -29,7 +44,6 @@ export default function EditorComponent({ output }: any) {
     try {
       let response = await axios.request(options);
       let statusId = response.data.status?.id;
-      console.log("STATS", statusId);
 
       // Processed - we have a result
       if (statusId === 1 || statusId === 2) {
@@ -46,6 +60,7 @@ export default function EditorComponent({ output }: any) {
         let exp = atob(response.data.expected_output);
 
         res = res.replaceAll("\n", "\\n");
+        res = res.replaceAll(", ", ",");
         exp = exp.replaceAll("\n", "");
         console.log(res);
         console.log(exp);
@@ -541,3 +556,23 @@ export const statuses = [
     description: "Exec Format Error",
   },
 ];
+
+function useInterval(callback: any, delay: any) {
+  const savedCallback = useRef();
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
