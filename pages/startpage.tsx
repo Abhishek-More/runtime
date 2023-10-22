@@ -33,8 +33,8 @@ export default function StartPage() {
   };
   
   return (
-    <div className="flex flex-col justify-center items-center h-screen w-screen gap-8">
-      <div className="text-7xl text-black font-extrabold font-metal">
+    <div className="flex flex-col justify-center items-center min-h-screen w-screen gap-8 py-12">
+      <div className="text-8xl text-black font-extrabold font-metal">
         RUNTIME
       </div>
 
@@ -56,7 +56,7 @@ export default function StartPage() {
         <div className="flex flex-col items-start">
           <label htmlFor="level" className="text-gray-600">Choose Your Level</label>
         </div>
-        <div className="flex flex-col items-center gap-4 mb-4 border border-1 border-gray-300 rounded-lg p-4">
+        <div className="flex flex-col items-center gap-4 mb-4 shadow-md rounded-lg p-4">
           <SelectButton
             label="BEGINNER RAPID-FIRE"
             selected={selectedButton === 'BEGINNER RAPID-FIRE'}
