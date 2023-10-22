@@ -7,6 +7,9 @@ import { firebaseConfig } from "./fireBaseConfig";
 import { initializeApp } from "firebase/app";
 import { useRouter } from "next/router";
 
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
 export default function EditorComponent({ output }: any) {
   const INITIAL_CODE = "# Write your code here";
   const router = useRouter();
@@ -21,14 +24,16 @@ export default function EditorComponent({ output }: any) {
   const [outputDetails, setOutputDetails] = useState(false);
 
   useInterval(() => {
-    axios({
-      method: "post",
-      url: "/api/upload",
-      data: {
-        code: code,
-        id: id,
-      },
-    });
+    if (id) {
+      axios({
+        method: "post",
+        url: "/api/upload",
+        data: {
+          code: code,
+          id: id,
+        },
+      });
+    }
   }, 3000);
 
   const checkStatus = async (token: any) => {
@@ -66,7 +71,7 @@ export default function EditorComponent({ output }: any) {
         console.log(exp);
 
         if (res == exp) {
-          console.log("CORRECT");
+          router.push("/complete?id=" + id);
         } else {
           console.log("WRONG DUMMY");
         }

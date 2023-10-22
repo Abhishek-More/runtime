@@ -25,7 +25,7 @@ export default async function handler(
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  await updateDoc(doc(db, "sessions", req.body.id), {
+  await updateDoc(doc(db, "sessions", "awdawd"), {
     frames: arrayUnion({ content: req.body.code, time: Date.now() }),
   });
 
