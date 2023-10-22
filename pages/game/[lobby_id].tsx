@@ -4,7 +4,7 @@ import { Lobby } from "@/pages/api/lobby/create";
 import { FirebaseApp, getApps, initializeApp } from "firebase/app";
 import { firebaseConfig } from "@/components/fireBaseConfig";
 import { collection, doc, getFirestore, onSnapshot } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Link } from "@chakra-ui/react";
 
 type Problem = {
@@ -38,6 +38,16 @@ export default function Home() {
       }, 6000);
     }
   }, [isGameEnded, player1Win, isPlayer1]);
+
+
+  const audioRef = useRef(null);
+  const playSound = () => {
+    if (audioRef.current) {
+      console.log("bonk is playing")
+      audioRef.current.play();
+    }
+    console.log("bonk is over")
+  };
 
   function ready() {
     setIsReady(!isReady);
@@ -169,6 +179,9 @@ export default function Home() {
       setTimeout(() => {
         setPlayingEndAnimation(false);
       }, 2000);
+      setTimeout(() => {
+        playSound();
+      }, 4000);
     }
   }, [lobby.lobby_state, isGameStarted, isGameEnded]);
 
@@ -216,6 +229,10 @@ export default function Home() {
       >
         RUNTIME
       </Link>
+      <audio ref={audioRef} id="bonk">
+        <source src="/bonk.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
       <div className="flex gap-24 align-center items-center text-center rounded-lg border border-1px shadow-sm mt-12 px-24 py-4 gap-2 font-bold">
         <div>
           <h1 className="text-center text-lg">
@@ -265,6 +282,9 @@ export default function Home() {
           </h1>
         )}
       </div>
+
+      {/* <button onClick={playSound}>bonk</button> */}
+
 
       <div>
         {!isGameEnded ? (
