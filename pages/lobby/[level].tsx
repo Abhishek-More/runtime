@@ -1,5 +1,5 @@
 import EditorComponent from "@/components/editorTab";
-import { Button } from "@chakra-ui/react";
+import { Button, Link } from "@chakra-ui/react";
 import React, { useEffect, useState } from 'react';
 import LobbyComponent from "@/components/lobbyComponent";
 import { Lobby } from "../api/lobby/create";
@@ -8,7 +8,12 @@ import { firebaseConfig } from "@/components/fireBaseConfig";
 import { collection, getFirestore, onSnapshot } from "firebase/firestore";
 import { useRouter } from "next/router";
 
-
+const levelQueryMapping = {
+    'easys': 'BEGINNER RAPID-FIRE',
+    'mids': 'LEETCODE EASY',
+    'mediums': 'LEETCODE MEDIUM'
+  };
+  
 export default function Lobby() {
     const router = useRouter();
     const { level, nickname } = router.query;
@@ -68,6 +73,13 @@ export default function Lobby() {
     
     return(
         <div className="min-h-screen flex flex-col p-12 justify-center items-center font-monda gap-4">
+            <div className="absolute top-0 left-0 px-12 py-6">
+                <Link className="" href="/">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                    </svg>
+                </Link>
+            </div>            
             <img src="/swords.svg" alt="Swords" className="w-20 h-20"/>
             <div className="text-5xl font-bold text-gray-700 font-metal mb-8">Enter the Ring: Find a Lobby</div>
             <div className="flex flex-col gap-6 bg-white w-full md:max-w-2xl rounded-lg shadow border-gray-600 border-double border-2 px-6 py-8">
@@ -76,7 +88,7 @@ export default function Lobby() {
                         <img src="/explosion.svg" alt="Swords" className="w-8 h-8"/>
                         <div className="font-bold text-gray-700">LET&apos;S GET CODING, {nickname}!</div>
                     </div>
-                    <div className="font-bold text-gray-700">Your Level Selection: {level}</div>
+                    <div className="font-bold text-gray-400">Your Level Selection: {levelQueryMapping[router.query.level]}</div>
                     {isCreatingLobby ?
                     <Button className="">Creating Your Lobby...</Button>
                     : <Button className="" onClick={createLobby}>CREATE PERSONAL LOBBY</Button>
