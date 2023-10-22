@@ -11,9 +11,9 @@ function SelectButton({ label, selected, onClick }: any) {
       p="2"
       rounded="lg"
       cursor="pointer"
-      bg={selected ? 'pink.500' : 'gray.100'}
+      bg={selected ? 'black' : 'gray.100'}
       color={selected ? 'white' : 'black'}
-      _hover={{ bg: 'pink.500', color: 'white'}}
+      _hover={{ bg: 'black', color: 'white'}}
       onClick={() => onClick(label)}
     >
       {label}
@@ -40,11 +40,11 @@ export default function StartPage() {
 
       <div className="flex flex-col justify-center bg-white rounded-lg p-6 shadow-md gap-4 font-monda border border-gray-600 border-double border-2 pb-12">
         <div>
-          <div className="text-xl font-semibold">
+          <div className="text-xl font-semibold mb-2">
             HOWDY PLAYER, WELCOME TO THE RING. 
           </div>
           <div className="text-center text-sm mb-4">
-            WILL YOU BE THE NEXT KING OF THE HEAP?
+            WILL <span className="font-semibold">YOU</span> BE THE NEXT KING OF THE HEAP?
           </div>
         </div>
         
