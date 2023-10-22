@@ -32,7 +32,7 @@ export default function Lobby() {
                     body: JSON.stringify({problemSet:level})
                 })
                 const data = await response.json();
-                window.location.href = "/game/" + data.newLobbyId;
+                window.location.href = "/game/" + data.newLobbyId + "?nickname=" + nickname;
             } 
             catch (error) {
                 console.error("Error creating lobby:", error);

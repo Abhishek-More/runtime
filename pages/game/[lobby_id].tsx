@@ -15,7 +15,8 @@ type Problem = {
 export default function Home() {
   // get the lobby id from the url
   const router = useRouter();
-  const { lobby_id } = router.query;
+  const { lobby_id, nickname } = router.query;
+  
 
   const [lobby, setLobby] = useState({} as Lobby);
   const [problemSet, setProblemSet] = useState([] as Problem[]);
@@ -48,6 +49,25 @@ export default function Home() {
       setProblemSet(updatedData);
     });
 
+    // Join the lobby
+    const joinLobby = async () => {
+      const response = await fetch("/api/lobby/join", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          lobbyId: lobby_id,
+          nickname: nickname
+        })
+      });
+      const data = await response.json();
+      if (data.status !== "Success") {
+        console.error("Error joining lobby:", data);
+        alert("Error joining lobby: " + data.status);
+      }
+    }
+    joinLobby();
 
     // Clean up the subscription when the component unmounts
     return () => {unsubscribe(); problemSetUnsubscribe()};
