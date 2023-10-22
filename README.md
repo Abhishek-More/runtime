@@ -1,40 +1,31 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+**TLDR**: Competitive programming platform that allowed for racing (like typeracer) and a 'session replay' analysis feature for educating new coders. Fully functional code execution, real-time multiplayer, connectivity, NLP analysis, and more!
 
-## Getting Started
+## Inspiration
+As of 2023, the Software Engineer market is in shambles, and the industry is extremely competitive. In order to stand out, applicants need to hone their technical interviewing abilities. Additionally, younger students who are passionate about computer science need to be prepared to enter this job market. Most technical interviews usually involve competitive programming, which is a series of coding challenges ranging from easy to hard. Despite this, most universities fail to teach competitive programming in core curriculums. Runtime solves this by offering a comprehensive competitive programming platform that gamifies learning, while providing assistance with AI.
 
-First, run the development server:
+## What it does
+Runtime solves this by offering a comprehensive competitive programming platform that gamifies learning, while providing assistance with AI. It has several features:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Realtime Multiplayer Races
+We've noticed that it is difficult to learn competitive programming by yourself. Runtime offers a typeracer-style coding game where players go head-to-head to complete 5-10 programming problems quickly. We aim to improve decision-making time and general syntax knowledge of the computer science community. We accomplished real-time multiplayer connectivity with Firestore.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Assisted Individual Problems
+If you just want to review problems alone, Runtime has a single-player mode as well. This unlimited time mode offers AI assistance by providing relevant hints to a problem before revealing the solution. In our experience, most students tend to give up and check the solution when they get stuck. WIth this feature, students are encouraged to keep trying and push themselves to discover the optimal solution.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### Session Replay
+Runtime allows users to watch a replay of their solution and utilizes NLP to determine important events (binary heap implemented at t=10s). We believe that seeing this information will give users the opportunity to learn their strengths and weaknesses. These videos can also be sent to friends and peers as competition.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## How we built it
+React/Next.JS, Firebase, OpenAI API, TailwindCSS, Chakra UI, TypeScript
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Challenges we ran into
+One of the challenges we ran into was combining all of our separate features. To do so, we had a **large** amount of merge conflicts that we had to handle before being able to keep making progress.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Accomplishments that we're proud of
+We worked on many features that we have never done before. For example, we used Firebase and Firestore for the first time. We are also proud of the playful art.
 
-## Learn More
+## What we learned
+We learned a lot about NoSQL databases, as well as realtime connectivity.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## What's next for Runtime
+Billions and Millions
