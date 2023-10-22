@@ -38,7 +38,7 @@ export default function EditorComponent() {
                 cursor={"pointer"}
                 onChange={(e) => setLanguage(e.target.value)} value={language}>
                     {Object.keys(LANGUAGES).map((language) =>                    
-                        <option key={language} value={language}>{LANGUAGES[language]}</option>
+                        <option key={language} value={language}>{LANGUAGES[language as keyof typeof LANGUAGES]}</option>
                     )}
                 </Select>
             </div>
