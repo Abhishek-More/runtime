@@ -173,9 +173,9 @@ export default function Home() {
   }, [lobby.lobby_state, isGameStarted, isGameEnded]);
 
   const player1_percentage =
-    (Math.max(lobby.player1_progress, 0) / problemSet.length) * 100;
+    (Math.max(lobby.player1_progress, 0) / (lobby && lobby.lobby_problemset !== "easys" ? problemSet.length : 5)) * 100;
   const player2_percentage =
-    (Math.max(lobby.player2_progress, 0) / problemSet.length) * 100;
+    (Math.max(lobby.player2_progress, 0) / (lobby && lobby.lobby_problemset !== "easys" ? problemSet.length : 5)) * 100;
 
   // Check if someone has won
   if (player1_percentage >= 100 && !isGameEnded && isGameStarted) {
@@ -276,7 +276,7 @@ export default function Home() {
         )}
       </div>
 
-      <div className="flex gap-48 mb-12">
+      {/* <div className="flex gap-48 mb-12">
         <div className="flex flex-col items-center gap-2">
           <img src="/resting.gif" width="48px"></img>
           <div
@@ -287,9 +287,7 @@ export default function Home() {
               className="flex h-6 w-48 items-center justify-center rounded-full bg-black text-xs leading-none"
               style={{ width: player1_percentage + "%", height: "100%" }}
             ></div>
-            {/* <div className="absolute inset-0 flex items-center justify-center">
-              <div className="h-8 w-8 rounded-full bg-red-500"></div>
-            </div> */}
+
           </div>
         </div>
 
@@ -308,7 +306,7 @@ export default function Home() {
             ></div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div>
         {playingCorrectAnimation && (
