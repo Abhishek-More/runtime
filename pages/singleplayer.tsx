@@ -2,18 +2,11 @@ import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemote } from "next-mdx-remote";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { collection, doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { components } from "@/components/MDXComponents";
 import EditorComponent from "@/components/editorTab";
+import { firebaseConfig } from "@/components/fireBaseConfig";
 
-const firebaseConfig = {
-  apiKey: process.env.apiKey,
-  authDomain: process.env.authDomain,
-  projectId: process.env.projectId,
-  storageBucket: process.env.storageBucket,
-  messagingSenderId: process.env.messagingSenderId,
-  appId: process.env.appId,
-};
 //
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -26,7 +19,7 @@ export default function Home({ source, title, output }: any) {
 
   return (
     <div className="h-screen w-screen" suppressHydrationWarning>
-      <div className="flex justify-center text-3xl min-h-[60px]">Navbar</div>
+      <div className="flex justify-center text-3xl min-h-[60px]">Nav </div>
       <div className="flex w-screen h-full gap-2 items-center">
         <div className="w-2/5 h-full ml-4 mb-4 p-4 bg-gray-900 rounded-lg text-white">
           {source && (
