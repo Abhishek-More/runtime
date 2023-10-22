@@ -37,7 +37,10 @@ export default function Lobby() {
                     body: JSON.stringify({problemSet:level})
                 })
                 const data = await response.json();
-                window.location.href = "/game/" + data.newLobbyId + "?nickname=" + nickname;
+                const params = new URLSearchParams();
+                params.append("nickname", nickname as string);
+
+                window.location.href = "/game/" + data.newLobbyId + "?" + params.toString();
             } 
             catch (error) {
                 console.error("Error creating lobby:", error);
@@ -102,8 +105,8 @@ export default function Lobby() {
                 </svg>
               </div>
               <div>
-                  {lobbies.map((item) => (
-                      <LobbyComponent key={item.lobby_id} lobby={item}></LobbyComponent>
+                  {lobbies.filter((lobby) => {return lobby.lobby_problemset === level && !(lobby.player1_nickname !== "" && lobby.player2_nickname !== "")}).map((item) => (
+                      <LobbyComponent key={item.lobby_id} lobby={item} nickname={nickname as string}></LobbyComponent>
                   ))}
               </div>
           </div>
