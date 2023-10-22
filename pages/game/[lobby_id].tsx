@@ -5,6 +5,7 @@ import { FirebaseApp, getApps, initializeApp } from "firebase/app";
 import { firebaseConfig } from "@/components/fireBaseConfig";
 import { collection, doc, getFirestore, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { Button, Link } from "@chakra-ui/react";
 
 type Problem = {
   title: string,
@@ -163,18 +164,20 @@ useEffect(() => {
   }
 
   return (
-    <div className="flex flex-col justify-center align-center items-center h-screen w-screen py-4 gap-4 mt-48">
-      <div className="text-5xl text-black font-extrabold font-metal">
+    <div className="flex flex-col justify-center align-center items-center h-screen w-screen gap-2 mt-28 font-monda">
+      <Link href="/" className="fixed left-12 top-4 text-xl text-black font-extrabold font-metal">
         RUNTIME
-      </div>
-      <div>
-        <h1 className="text-2xl"><span className={isPlayer1 ? "bg-purple-400" : ""}>{lobby.player1_nickname}</span> vs. <span className={!isPlayer1 ? "bg-purple-400" : ""}>{lobby.player2_nickname}</span></h1>
-      </div>
+      </Link>
+      <div className="flex flex-col justify-center text-center rounded-lg border border-1px shadow-sm mt-12 px-48 py-4 gap-2">
+        <div>
+          <h1 className="text-center text-lg"><span className={isPlayer1 ? "font-bold text-purple-800" : ""}>{lobby.player1_nickname}</span> vs. <span className={!isPlayer1 ? "font-bold text-purple-800" : ""}>{lobby.player2_nickname}</span></h1>
+        </div>
 
-      <div>
-         { isGameStarted ? <div></div> :
-         <button className={"text-2xl rounded-md border-4 " + (isReady ? "animate-bounce bg-purple-400" : "")} onClick={() => {ready()}}>Ready</button>
-         }
+          <div>
+          { isGameStarted ? <div></div> :
+          <Button  className={(isReady ? "animate-bounce" : "") + ""} onClick={() => { ready() }} fontSize="xs">I&apos;M READY </Button>
+          }
+        </div>
        </div>
 
        <div>
@@ -195,32 +198,36 @@ useEffect(() => {
           }
         </div>
        
-      <div className="relative ">
-        <div
-          className="rounded-full border border-black"
-          style={{ width: "120px", height: "12px" }}
-        >
-          <div
-            className="flex h-6 w-48 items-center justify-center rounded-full bg-black text-xs leading-none"
-            style={{ width: player1_percentage + "%", height: "100%" }}
-          ></div>
+      <div className="flex gap-48 mb-12">
+        <div className="flex flex-col items-center gap-2">
+          <img src="/resting.gif" width ="48px"></img>
+          <div className="rounded-full border border-black"
+            style={{ width: "400px", height: "8px" }}>
+            <div
+              className="flex h-6 w-48 items-center justify-center rounded-full bg-black text-xs leading-none"
+              style={{ width: player1_percentage + "%", height: "100%" }}>
+            </div>
+            {/* <div className="absolute inset-0 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-red-500"></div>
+            </div> */}
+          </div>
         </div>
         
         <br />
 
-        <div
-          className="rounded-full border border-black"
-          style={{ width: "120px", height: "12px" }}
-        >
-          <div
-            className="flex h-6 w-48 items-center justify-center rounded-full bg-black text-xs leading-none"
-            style={{ width: player2_percentage + "%", height: "100%" }}
-          ></div>
+        <div className="flex flex-col items-center gap-2">
+          <img src="/resting.gif" width ="48px"></img>
+
+          <div className="rounded-full border border-black"
+            style={{ width: "400px", height: "8px" }}>
+            <div
+              className="flex h-6 w-48 items-center justify-center rounded-full bg-black text-xs leading-none"
+              style={{ width: player2_percentage + "%", height: "100%" }}>
+            </div>
+          </div>
         </div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          {/* <div className="h-8 w-8 rounded-full bg-red-500"></div> */}
-        </div>
-      d</div>
+
+      </div>
 
       <div>
         <button onClick={() => increaseScore(1)}>Give player 1 a point</button>
@@ -232,7 +239,7 @@ useEffect(() => {
         <div className="flex flex-col gap-4 w-3/5 h-full mb-4 rounded-lg">
           <EditorComponent />
         </div>
-      di</div>
+      </div>
     </div>
   );
 }
