@@ -71,41 +71,45 @@ export default function Home() {
   
   return (
     <div className="relative">
-      <div className="flex justify-between"
+      <div className="fixed right-12 bottom-12">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-8 h-8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+        </svg>
+
+      </div>
+      <div className="flex justify-between pl-12 align-center pt-4 w-screen"
           style={{
             position: 'fixed',
-            top: 112,
-            left: 64,
-            width: '90%',
-            height: '70%',
+            width: '100%',
+            height: '100%',
             zIndex: 0,
           }}
         >
           <motion.img
-            className="opacity-30 "
+            className="opacity-10 "
             src="/landingcat1.png"
             alt="Background Image"
-            initial={{ y: 0, rotate: 0 }} // Initial rotation is 0 degrees
+            initial={{ y: 10, rotate: 0 }} // Initial rotation is 0 degrees
             animate={{
-              y: [-10, 10, -10],
-              rotate: [0, 360], // Rotate from 0 to 360 degrees and back
+              y: [-5, 5, -5],
+              // rotate: [0, 360], // Rotate from 0 to 360 degrees and back
             }}
             transition={{
-              duration: 80, // Increase the duration for slower spin
+              duration: 2, // Increase the duration for slower spin
               repeat: Infinity,
             }}
           />
           <motion.img
-            className="opacity-30"
+            className="opacity-10"
             src="/landingcat2.png"
             alt="Background Image"
-            initial={{ y: 0, rotate: 0 }} // Initial rotation is 0 degrees
+            initial={{ y: 0, rotate: -5 }} // Initial rotation is 0 degrees
             animate={{
-              y: [-10, 10, -10],
-              rotate: [0, 360], // Rotate from 0 to 360 degrees and back
+              y: [5, -5, 5],
+              // rotate: [0, 360], // Rotate from 0 to 360 degrees and back
             }}
             transition={{
-              duration: 80, // Increase the duration for slower spin
+              duration: 2, // Increase the duration for slower spin
               repeat: Infinity,
             }}
           />
