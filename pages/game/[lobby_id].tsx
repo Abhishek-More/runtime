@@ -11,7 +11,9 @@ type Problem = {
   title: string,
   problem: string,
   output: string,
+  problemNumber: number,
 }
+
 
 export default function Home() {
   // get the lobby id from the url
@@ -29,6 +31,7 @@ export default function Home() {
   const [playingStartAnimation, setPlayingStartAnimation] = useState(false);
   const [playingEndAnimation, setPlayingEndAnimation] = useState(false);
   const [showVideo, setShowVideo] = useState(true); // Add this state
+  const [playingCorrectAnimation, setPlayingCorrectAnimation] = useState(false);
 
   useEffect(() => {
     if (isGameEnded && (player1Win ? isPlayer1 : !isPlayer1)) {
@@ -54,9 +57,17 @@ export default function Home() {
     });
   }
 
-  function increaseScore(player: number)
+  function increaseScore(player: number, playAnimation: boolean = true)
   {
     const increasePlayer1 = player === 1;
+
+    if (playAnimation) {
+      setPlayingCorrectAnimation(true);
+      setTimeout(() => {
+        setPlayingCorrectAnimation(false);
+      }, 2000);
+    }
+
     fetch("/api/lobby/increaseScore", {
       method: "POST",
       headers: {
@@ -165,15 +176,29 @@ useEffect(() => {
   const player2_percentage = Math.max(lobby.player2_progress, 0) / problemSet.length * 100;
 
   // Check if someone has won
-  if (player1_percentage >= 100 && !isGameEnded) {
+  if (player1_percentage >= 100 && !isGameEnded && isGameStarted) {
     win(1);
   }
-  if (player2_percentage >= 100 && !isGameEnded) {
+  if (player2_percentage >= 100 && !isGameEnded && isGameStarted) {
     win(2);
   }
 
+  const myProgress = isPlayer1 ? lobby.player1_progress : lobby.player2_progress;
+  let currentProblem;
+  let source;
+  // let mdxSource = useRef<any>();
+  let title;
+  let output;
+  if (problemSet.length !== 0 && myProgress < problemSet.length && myProgress >= 0 && isGameStarted) {
+    currentProblem = problemSet.find((problem) => problem.problemNumber === myProgress + 1);
+    source = currentProblem?.problem;
+    console.log(source);
+    title = currentProblem?.title;
+    output = currentProblem?.output;
+  }
+
   return (
-    <div className="flex flex-col justify-center align-center items-center h-screen w-screen gap-2 mt-28 font-monda">
+    <div className="flex flex-col justify-center align-center items-center h-screen w-screen gap-2 mt-28 font-monda" suppressHydrationWarning>
       <Link href="/" className="fixed left-12 top-4 text-xl text-black font-extrabold font-metal">
         RUNTIME
       </Link>
@@ -195,6 +220,12 @@ useEffect(() => {
       <div>
         { playingStartAnimation &&
           <h1 className="fixed animate-pulse text-black font-bold text-8xl font-metal">GO!</h1>
+        }
+      </div>
+
+      <div>
+        { playingCorrectAnimation &&
+          <h1 className="fixed animate-pulse text-black font-bold text-8xl font-metal">CORRECT!</h1>
         }
       </div>
   
@@ -294,9 +325,18 @@ useEffect(() => {
     </div> */}
   
     <div className="flex w-screen h-full gap-2 items-center">
-      <div className="w-2/5 h-full ml-4 mb-4 bg-sc-darkpurple rounded-lg"></div>
-      <div className="flex flex-col gap-4 w-3/5 h-full mb-4 rounded-lg">
-        <EditorComponent />
+    <div className="w-2/5 h-full ml-4 mb-4 p-4 bg-gray-900 rounded-lg text-white">
+          {source && (
+            <div>
+              <p className="text-2xl font-bold mb-4">{title}</p>
+              <div className="whitespace-pre-wrap">
+                <div dangerouslySetInnerHTML={{__html: source}}></div>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="flex flex-col gap-4 w-3/5 h-full mb-4 rounded-lg">
+          <EditorComponent output={output} onCorrect={() => {increaseScore(isPlayer1 ? 1 : 2)}} />
       </div>
     </div>
   </div>
