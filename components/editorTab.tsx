@@ -5,12 +5,14 @@ import { Select, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { languages } from "monaco-editor";
 
-export default function EditorComponent() {
+export default function EditorComponent({ output }: any) {
   const INITIAL_CODE = "# Write your code here";
   const toast = useToast();
 
   const [code, setCode] = useState<string>(INITIAL_CODE);
-  const [language, setLanguage] = useState<any>(languageOptions[38]);
+  const [language, setLanguage] = useState<any>(
+    languageOptions.find((lang) => lang.value === "python")
+  );
   const [processing, setProcessing] = useState(false);
   const [outputDetails, setOutputDetails] = useState(false);
 
@@ -27,6 +29,7 @@ export default function EditorComponent() {
     try {
       let response = await axios.request(options);
       let statusId = response.data.status?.id;
+      console.log("STATS", statusId);
 
       // Processed - we have a result
       if (statusId === 1 || statusId === 2) {
@@ -38,7 +41,20 @@ export default function EditorComponent() {
       } else {
         setProcessing(false);
         setOutputDetails(response.data);
-        console.log("SUCCESS");
+
+        let res = atob(response.data.stdout);
+        let exp = atob(response.data.expected_output);
+
+        res = res.replaceAll("\n", "\\n");
+        exp = exp.replaceAll("\n", "");
+        console.log(res);
+        console.log(exp);
+
+        if (res == exp) {
+          console.log("CORRECT");
+        } else {
+          console.log("WRONG DUMMY");
+        }
         console.log("response.data", response.data);
         return;
       }
@@ -58,12 +74,14 @@ export default function EditorComponent() {
       duration: 2000,
       isClosable: true,
     });
+    console.log(output);
 
     const formData = {
       language_id: language.id,
       // encode source code in base64
       source_code: btoa(code),
       stdin: btoa(code),
+      expected_output: btoa(`${output}`),
     };
     const options = {
       method: "POST",
@@ -158,12 +176,12 @@ const OutputWindow = ({ outputDetails }: any) => {
           {atob(outputDetails?.compile_output)}
         </pre>
       );
-    } else if (statusId === 3) {
+    } else if (statusId === 3 || statusId === 4) {
       return (
         <pre className="px-2 py-1 font-normal text-xs text-green-500">
           {atob(outputDetails.stdout) !== null
             ? `${atob(outputDetails.stdout)}`
-            : null}
+            : "Error"}
         </pre>
       );
     } else if (statusId === 5) {
