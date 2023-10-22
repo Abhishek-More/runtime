@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { collection, doc, setDoc, getDoc } from "firebase/firestore";
-import { v4 as uuidv4 } from 'uuid';
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 type Data = {
   status: string,

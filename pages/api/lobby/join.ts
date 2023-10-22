@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { collection, doc, setDoc, getDoc } from "firebase/firestore";
-import { v4 as uuidv4 } from 'uuid';
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 type Data = {
   status: string,
@@ -61,7 +60,7 @@ export default async function handler(
     // Check if player is already in lobby
     const lobbyData = lobbySnap.data() as Lobby;
     if (lobbyData.player1_nickname === nickname || lobbyData.player2_nickname === nickname) {
-        res.status(400).json({ status: 'Success', isPlayer1: lobbyData.player1_nickname === nickname });
+        res.status(200).json({ status: 'Success', isPlayer1: lobbyData.player1_nickname === nickname });
         return;
     }
 

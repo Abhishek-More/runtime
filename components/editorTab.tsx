@@ -3,14 +3,9 @@ import { Editor } from "@monaco-editor/react";
 import { useState, useEffect, useRef } from "react";
 import { Select, useToast } from "@chakra-ui/react";
 import axios from "axios";
-import { firebaseConfig } from "./fireBaseConfig";
-import { initializeApp } from "firebase/app";
 import { useRouter } from "next/router";
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
-export default function EditorComponent({ output }: any) {
+export default function EditorComponent({ output, onCorrect }: any) {
   const INITIAL_CODE = "# Write your code here";
   const router = useRouter();
   const { id } = router.query;
@@ -71,7 +66,12 @@ export default function EditorComponent({ output }: any) {
         console.log(exp);
 
         if (res == exp) {
-          router.push("/complete?id=" + id);
+          if (!id) {
+            console.log("CORRECT");
+            onCorrect();
+          } else {
+            router.push("/complete?id=" + id);
+          }
         } else {
           console.log("WRONG DUMMY");
         }

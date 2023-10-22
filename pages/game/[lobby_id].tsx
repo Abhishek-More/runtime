@@ -11,6 +11,7 @@ type Problem = {
   title: string;
   problem: string;
   output: string;
+  problemNumber: number;
 };
 
 export default function Home() {
@@ -27,6 +28,16 @@ export default function Home() {
   const [player1Win, setPlayer1Win] = useState(false);
   const [playingStartAnimation, setPlayingStartAnimation] = useState(false);
   const [playingEndAnimation, setPlayingEndAnimation] = useState(false);
+  const [showVideo, setShowVideo] = useState(true); // Add this state
+  const [playingCorrectAnimation, setPlayingCorrectAnimation] = useState(false);
+
+  useEffect(() => {
+    if (isGameEnded && (player1Win ? isPlayer1 : !isPlayer1)) {
+      setTimeout(() => {
+        setShowVideo(false);
+      }, 6000);
+    }
+  }, [isGameEnded, player1Win, isPlayer1]);
 
   function ready() {
     setIsReady(!isReady);
@@ -43,8 +54,16 @@ export default function Home() {
     });
   }
 
-  function increaseScore(player: number) {
+  function increaseScore(player: number, playAnimation: boolean = true) {
     const increasePlayer1 = player === 1;
+
+    if (playAnimation) {
+      setPlayingCorrectAnimation(true);
+      setTimeout(() => {
+        setPlayingCorrectAnimation(false);
+      }, 2000);
+    }
+
     fetch("/api/lobby/increaseScore", {
       method: "POST",
       headers: {
@@ -159,11 +178,34 @@ export default function Home() {
     (Math.max(lobby.player2_progress, 0) / problemSet.length) * 100;
 
   // Check if someone has won
-  if (player1_percentage >= 100 && !isGameEnded) {
+  if (player1_percentage >= 100 && !isGameEnded && isGameStarted) {
     win(1);
   }
-  if (player2_percentage >= 100 && !isGameEnded) {
+  if (player2_percentage >= 100 && !isGameEnded && isGameStarted) {
     win(2);
+  }
+
+  const myProgress = isPlayer1
+    ? lobby.player1_progress
+    : lobby.player2_progress;
+  let currentProblem;
+  let source;
+  // let mdxSource = useRef<any>();
+  let title;
+  let output;
+  if (
+    problemSet.length !== 0 &&
+    myProgress < problemSet.length &&
+    myProgress >= 0 &&
+    isGameStarted
+  ) {
+    currentProblem = problemSet.find(
+      (problem) => problem.problemNumber === myProgress + 1
+    );
+    source = currentProblem?.problem;
+    console.log(source);
+    title = currentProblem?.title;
+    output = currentProblem?.output;
   }
 
   return (
@@ -174,7 +216,7 @@ export default function Home() {
       >
         RUNTIME
       </Link>
-      <div className="flex flex-col justify-center text-center rounded-lg border border-1px shadow-sm mt-12 px-48 py-4 gap-2">
+      <div className="flex gap-24 align-center items-center text-center rounded-lg border border-1px shadow-sm mt-12 px-24 py-4 gap-2 font-bold">
         <div>
           <h1 className="text-center text-lg">
             <span className={isPlayer1 ? "font-bold text-purple-800" : ""}>
@@ -269,14 +311,142 @@ export default function Home() {
       </div>
 
       <div>
-        <button onClick={() => increaseScore(1)}>Give player 1 a point</button>
-        <button onClick={() => increaseScore(2)}>Give player 2 a point</button>
+        {playingCorrectAnimation && (
+          <h1 className="fixed animate-pulse text-black font-bold text-8xl font-metal">
+            CORRECT!
+          </h1>
+        )}
       </div>
 
+      <div>
+        {playingEndAnimation && (
+          <h1 className="fixed top-24 left-0 w-screen h-screen flex justify-center z-50 animate-pulse text-black font-bold text-8xl font-metal">
+            GAME OVER
+          </h1>
+        )}
+      </div>
+
+      <div>
+        {isGameEnded && (
+          <div>
+            <h1 className="absolute top-24 left-0 w-screen h-screen flex justify-center z-50 text-4xl font-bold text-purple-800 font-metal">
+              {player1Win ? lobby.player1_nickname : lobby.player2_nickname}{" "}
+              WINS!
+            </h1>
+          </div>
+        )}
+      </div>
+      {isGameEnded && !player1Win && showVideo && (
+        <div className="fixed top-0 left-0 w-screen h-screen flex justify-center items-center z-50">
+          <div className="border border-2 border-black rounded-lg">
+            <img
+              src="/loser.png"
+              alt="Winning Image"
+              width="900px"
+              className="rounded-lg"
+            />
+          </div>
+        </div>
+      )}
+
+      {isGameEnded && (player1Win ? isPlayer1 : !isPlayer1) && showVideo && (
+        <div className="fixed top-0 left-0 w-screen h-screen flex justify-center items-center z-50">
+          <div className="border border-2 border-black rounded-lg">
+            <img
+              src="/winner.png"
+              alt="Winning Image"
+              width="900px"
+              className="rounded-lg"
+            />
+          </div>
+        </div>
+      )}
+
+      <div className="flex gap-48 mb-12">
+        <div className="flex flex-col items-center gap-2">
+          <div>
+            Coder <span className="font-bold">{lobby.player1_nickname}</span>
+          </div>
+          <div className="flex">
+            <div className="max-w-12px">
+              {isGameEnded && (
+                <div className="text-xs border border-2 border-black rounded-full px-2">
+                  On a path of enlightenment...
+                </div>
+              )}
+            </div>
+            <img src="/resting.gif" width="48px" alt="Resting GIF" />
+          </div>
+
+          <div
+            className="rounded-full border border-black"
+            style={{ width: "400px", height: "8px" }}
+          >
+            <div
+              className="flex h-6 w-48 items-center justify-center rounded-full"
+              style={{
+                width: player1_percentage + "%",
+                height: "100%",
+                background: "linear-gradient(to right, #5B168A, #F70080)", // Gradient background
+              }}
+            ></div>
+          </div>
+        </div>
+
+        <br />
+
+        <div className="flex flex-col items-center gap-2">
+          <div>
+            Coder <span className="font-bold">{lobby.player2_nickname}</span>
+          </div>
+          <div className="flex">
+            <div className="max-w-12px">
+              {isGameEnded && (
+                <div className="text-xs border border-2 border-black rounded-full px-2">
+                  Sharpening my academic weapon...
+                </div>
+              )}
+            </div>
+            <img src="/resting.gif" width="48px"></img>
+          </div>
+          <div
+            className="rounded-full border border-black"
+            style={{ width: "400px", height: "8px" }}
+          >
+            <div
+              className="flex h-6 w-48 items-center justify-center rounded-full"
+              style={{
+                width: player2_percentage + "%",
+                height: "100%",
+                background: "linear-gradient(to right, #5B168A, #F70080)", // Gradient background
+              }}
+            ></div>
+          </div>
+        </div>
+      </div>
+      {/* <div>
+      <button onClick={() => increaseScore(1)}>Give player 1 a point</button>
+      <button onClick={() => increaseScore(2)}>Give player 2 a point</button>
+    </div> */}
+
       <div className="flex w-screen h-full gap-2 items-center">
-        <div className="w-2/5 h-full ml-4 mb-4 bg-sc-darkpurple rounded-lg"></div>
+        <div className="w-2/5 h-full ml-4 mb-4 p-4 bg-gray-900 rounded-lg text-white">
+          {source && (
+            <div>
+              <p className="text-2xl font-bold mb-4">{title}</p>
+              <div className="whitespace-pre-wrap">
+                <div dangerouslySetInnerHTML={{ __html: source }}></div>
+              </div>
+            </div>
+          )}
+        </div>
         <div className="flex flex-col gap-4 w-3/5 h-full mb-4 rounded-lg">
-          <EditorComponent />
+          <EditorComponent
+            output={output}
+            onCorrect={() => {
+              increaseScore(isPlayer1 ? 1 : 2);
+            }}
+          />
         </div>
       </div>
     </div>
