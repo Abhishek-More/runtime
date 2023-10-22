@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Metal+Mania&family=Monda:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.select-button:hover{
+    border:2px;
+    border-color:black;
+}
