@@ -271,19 +271,18 @@ export default function Home() {
           </h1>
         </div>
 
-        <div>
-          {!isGameStarted && (
-            <Button
-              className={(isReady ? "animate-bounce" : "") + ""}
-              onClick={() => {
-                ready();
-              }}
-              fontSize="xs"
-            >
-              I&apos;M READY{" "}
-            </Button>
-          )}
-        </div>
+  
+        {!isGameStarted && (
+          <Button
+            className={(isReady ? "animate-bounce" : "") + ""}
+            onClick={() => {
+              ready();
+            }}
+            fontSize="xs"
+          >
+            I&apos;M READY{" "}
+          </Button>
+        )}
       </div>
 
     <div>
