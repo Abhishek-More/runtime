@@ -2,8 +2,6 @@ import EditorComponent from "@/components/editorTab";
 import { Button } from "@chakra-ui/react";
 import React, { useState } from 'react';
 
-
-
 function SelectButton({ label, selected, onClick }: any) {
   return (
     <Button
@@ -76,7 +74,6 @@ export default function StartPage() {
 
         <Button>PLAY</Button>
       </div>
-
     </div>
   );
 }
